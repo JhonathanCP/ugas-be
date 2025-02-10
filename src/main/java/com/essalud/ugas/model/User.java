@@ -40,7 +40,7 @@ public class User {
     private String email;
 
     @Column(nullable = false)
-    private boolean enabled;
+    private Boolean enabled;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", 

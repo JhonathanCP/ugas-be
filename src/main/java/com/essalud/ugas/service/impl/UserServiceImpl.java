@@ -40,7 +40,7 @@ public class UserServiceImpl extends CRUDImpl<User, Integer> implements IUserSer
             roles.add(new SimpleGrantedAuthority(rol.getName()));
         });
 
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.isEnabled(), true, true, true, roles);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getEnabled(), true, true, true, roles);
     }
     
 }

@@ -39,5 +39,5 @@ public class Token {
     private LocalDateTime issuedAt;
 
     @Column(name = "is_valid", nullable = false)
-    private boolean isValid = true;
+    private Boolean isValid = true;
 }

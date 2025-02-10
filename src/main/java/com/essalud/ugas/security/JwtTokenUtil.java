@@ -77,7 +77,7 @@ public class JwtTokenUtil implements Serializable {
         long validitySeconds = validity / 1000;
         newToken.setExpiration(LocalDateTime.now().plusSeconds(validitySeconds));
         newToken.setIssuedAt(LocalDateTime.now());
-        newToken.setValid(true);  // Todos los tokens son válidos al momento de su emisión
+        newToken.setIsValid(true);  // Todos los tokens son válidos al momento de su emisión
 
         repo.save(newToken);
     }
@@ -120,34 +120,34 @@ public class JwtTokenUtil implements Serializable {
     }
 
     // Verificar si el token ha expirado
-    public boolean isTokenExpired(String token){
+    public Boolean isTokenExpired(String token){
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
 
     // Validar si es un Access Token
-    public boolean isAccessToken(String token) {
+    public Boolean isAccessToken(String token) {
         String tokenType = getClaimFromToken(token, claims -> claims.get("type", String.class));
         return "access".equals(tokenType);
     }
 
     // Validar si es un Refresh Token
-    public boolean isRefreshToken(String token) {
+    public Boolean isRefreshToken(String token) {
         String tokenType = getClaimFromToken(token, claims -> claims.get("type", String.class));
         return "refresh".equals(tokenType);
     }
 
     // Validar el Access Token
-    public boolean validateAccessToken(String token, UserDetails userDetails){
+    public Boolean validateAccessToken(String token, UserDetails userDetails){
         final String username = getUsernameFromToken(token);
         return (username.equalsIgnoreCase(userDetails.getUsername()) && !isTokenExpired(token) && isAccessToken(token));
     }
 
     // Validar si un token es válido desde la base de datos
-    public boolean validateTokenFromDB(String token, UserDetails userDetails) {
+    public Boolean validateTokenFromDB(String token, UserDetails userDetails) {
         Optional<Token> tokenEntity = repo.findByToken(token);
         
-        if (tokenEntity.isEmpty() || !tokenEntity.get().isValid()) {
+        if (tokenEntity.isEmpty() || !tokenEntity.get().getIsValid()) {
             return false;  // Si el token no existe o no es válido, la validación falla
         }
         
@@ -158,7 +158,7 @@ public class JwtTokenUtil implements Serializable {
     public void revokeToken(String token) {
         Optional<Token> tokenEntity = repo.findByToken(token);
         tokenEntity.ifPresent(t -> {
-            t.setValid(false);
+            t.setIsValid(false);
             repo.save(t);
         });
     }

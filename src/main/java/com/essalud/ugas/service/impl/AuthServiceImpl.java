@@ -13,7 +13,7 @@ import lombok.val;
 @Service
 public class AuthServiceImpl { //Para uso de acceso usando @PreAuthorize
 
-    public boolean hasAccess(String path){
+    public Boolean hasAccess(String path){
         var rpta = false;
         val methodRole = switch (path) {
             case "ADMIN" -> "ADMIN";
