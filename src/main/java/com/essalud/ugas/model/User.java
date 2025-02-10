@@ -36,6 +36,9 @@ public class User {
     @Column(length = 60, nullable = false)
     private String password;
 
+    @Column(length = 200, nullable = false, unique = true)
+    private String email;
+
     @Column(nullable = false)
     private boolean enabled;
 

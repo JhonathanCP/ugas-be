@@ -46,6 +46,7 @@ public class LoginController {
         return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken));
     }
 
+    // Endpoint para refrescar el token
     @PostMapping("/refresh-token")
     public ResponseEntity<JwtResponse> refreshToken(@RequestBody Map<String, String> tokenRequest) throws Exception {
         // Extraer el refresh token del cuerpo de la solicitud
@@ -75,13 +76,16 @@ public class LoginController {
         // Generar un nuevo access token usando los detalles del usuario
         final String newAccessToken = jwtTokenUtil.generateToken(userDetails);
 
-        // Devolver el nuevo access token junto con el mismo refresh token
-        return ResponseEntity.ok(new JwtResponse(newAccessToken, refreshToken));
+        // Generar un nuevo refresh token
+        final String newRefreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
+
+        // Devolver el nuevo access token junto con el nuevo refresh token
+        return ResponseEntity.ok(new JwtResponse(newAccessToken, newRefreshToken));
     }
 
-    // Endpoint para logout
-    @PostMapping("/exit")
-    public ResponseEntity<String> logout(@RequestBody Map<String, String> tokenRequest) {
+    // Endpoint para dar de baja el token
+    @PostMapping("/logout-token")
+    public ResponseEntity<String> logout(@RequestBody Map<String, String> tokenRequest) throws Exception{
         String accessToken = tokenRequest.get("access_token");
         String refreshToken = tokenRequest.get("refresh_token");
 
@@ -96,8 +100,7 @@ public class LoginController {
         }
 
         return ResponseEntity.ok("Logged out successfully");
-    }
-    
+    }    
 
     private void authenticate(String username, String password) throws Exception {
         try {

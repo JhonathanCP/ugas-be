@@ -52,7 +52,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(antMatcher("/login")).permitAll()
-                        .requestMatchers(antMatcher("/exit")).permitAll()
+                        .requestMatchers(antMatcher("/logout-token")).permitAll()
                         .requestMatchers(antMatcher("/refresh-token")).permitAll()
                         .requestMatchers(antMatcher("/mail/**")).permitAll()
                         .anyRequest().authenticated()

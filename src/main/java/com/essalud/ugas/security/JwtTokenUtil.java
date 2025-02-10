@@ -30,7 +30,8 @@ public class JwtTokenUtil implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final long JWT_TOKEN_VALIDITY = 5 * 60 * 60 * 1000; // 5 horas
+    //private final long JWT_TOKEN_VALIDITY = 5 * 60 * 60 * 1000; // 5 horas
+    private final long JWT_TOKEN_VALIDITY = 10 * 24 * 60 * 60 * 1000; // 10 días
     private final long REFRESH_TOKEN_VALIDITY = 10 * 24 * 60 * 60 * 1000; // 10 días
 
     @Value("${jwt.secret}")
