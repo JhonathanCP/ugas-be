@@ -38,7 +38,6 @@ public class ReportDTO {
     @NotNull
     private Boolean active;
 
-    @NotNull
     private LocalDateTime createTime;
 
 }

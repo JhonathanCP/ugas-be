@@ -23,7 +23,6 @@ public class AccessAuditDTO {
     @NotNull
     private ReportDTO report;
 
-    @NotNull
     private LocalDateTime accessDateTime;
 
 }

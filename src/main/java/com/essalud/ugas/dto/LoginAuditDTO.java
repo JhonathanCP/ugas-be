@@ -28,7 +28,6 @@ public class LoginAuditDTO {
     @NotNull
     private Boolean success;
 
-    @NotNull
     private LocalDateTime accessDateTime;
 
 }
