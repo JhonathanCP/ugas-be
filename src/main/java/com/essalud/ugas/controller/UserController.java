@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -62,6 +63,7 @@ public class UserController {
         return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
     }
 
+    @PreAuthorize("@authServiceImpl.hasAccess('ADMIN')")
     @PostMapping
     public ResponseEntity<Void> save(@Valid @RequestBody UserDTO dto) {
         User p = userService.save(mapper.map(dto, User.class));
@@ -88,6 +90,7 @@ public class UserController {
     }
 
 
+    @PreAuthorize("@authServiceImpl.hasAccess('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Integer id) {
         User obj = userService.findById(id);
@@ -101,6 +104,7 @@ public class UserController {
     }
 
     // Métodos relacionados con los reportes de un usuario
+    @PreAuthorize("@authServiceImpl.hasAccess('ADMIN')")
     @PostMapping("/{userId}/reports/{reportId}")
     public ResponseEntity<Void> addReportToUser(@PathVariable Integer userId, @PathVariable Integer reportId) {
         User user = userService.findById(userId);
@@ -115,6 +119,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}/reports/{reportId}")
+    @PreAuthorize("@authServiceImpl.hasAccess('ADMIN')")
     public ResponseEntity<Void> removeReportFromUser(@PathVariable Integer userId, @PathVariable Integer reportId) {
         User user = userService.findById(userId);
         Report report = reportService.findById(reportId);
@@ -187,6 +192,7 @@ public class UserController {
     }
 
     // Métodos relacionados con los módulos de un usuario
+    @PreAuthorize("@authServiceImpl.hasAccess('ADMIN')")
     @PostMapping("/{userId}/modules/{moduleId}")
     public ResponseEntity<Void> addReportsForModuleToUser(@PathVariable Integer userId, @PathVariable Integer moduleId) {
         User user = userService.findById(userId);
@@ -199,6 +205,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @PreAuthorize("@authServiceImpl.hasAccess('ADMIN')")
     @DeleteMapping("/{userId}/modules/{moduleId}")
     public ResponseEntity<Void> removeReportsForModuleFromUser(@PathVariable Integer userId, @PathVariable Integer moduleId) {
         User user = userService.findById(userId);
@@ -211,6 +218,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @PreAuthorize("@authServiceImpl.hasAccess('ADMIN')")
     @PostMapping("/{userId}/all-reports")
     public ResponseEntity<Void> addAllReportsToUser(@PathVariable Integer userId) {
         User user = userService.findById(userId);
@@ -223,6 +231,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @PreAuthorize("@authServiceImpl.hasAccess('ADMIN')")
     @DeleteMapping("/{userId}/all-reports")
     public ResponseEntity<Void> removeAllReportsFromUser(@PathVariable Integer userId) {
         User user = userService.findById(userId);
