@@ -17,7 +17,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.essalud.ugas.model.Token;
+import com.essalud.ugas.model.User;
 import com.essalud.ugas.repo.ITokenRepo;
+import com.essalud.ugas.repo.IUserRepo;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -39,13 +41,17 @@ public class JwtTokenUtil implements Serializable {
 
     private final ITokenRepo repo;
 
+    private final IUserRepo userRepo;
+
     // Generar el Access Token y guardarlo en la base de datos
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        User user = userRepo.findOneByUsername(userDetails.getUsername());
         claims.put("role", userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","))); // ADMIN,USER,DBA
         claims.put("type", "access");
+        claims.put("id", user.getIdUser()); // <-- Se agrega el idUser al token
 
         String token = doGenerateToken(claims, userDetails.getUsername(), JWT_TOKEN_VALIDITY);
 
