@@ -36,6 +36,9 @@ public class Report {
     @Column(length = 200, nullable = false)
     private String description;
 
+    @Column(length = 250, nullable = true)
+    private String url;
+
     @ManyToOne
     @JoinColumn(name = "id_report_type", nullable = false, foreignKey = @ForeignKey(name = "FK_REPORT_REPORT_TYPE"))
     private ReportType reportType;

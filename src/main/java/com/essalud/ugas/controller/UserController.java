@@ -22,11 +22,13 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.essalud.ugas.dto.ModuleDTO;
 import com.essalud.ugas.dto.ReportDTO;
 import com.essalud.ugas.dto.UserDTO;
 import com.essalud.ugas.exception.ModelNotFoundException;
 import com.essalud.ugas.model.Report;
 import com.essalud.ugas.model.User;
+import com.essalud.ugas.model.Module;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -242,6 +244,22 @@ public class UserController {
 
         userService.removeAllReportsFromUser(user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{userId}/modules")
+    public ResponseEntity<List<ModuleDTO>> getModulesWithActiveReports(@PathVariable Integer userId) {
+        User user = userService.findById(userId);
+    
+        if (user == null) {
+            throw new ModelNotFoundException("User not found");
+        }
+    
+        List<Module> modules = userService.getModulesWithActiveReports(user);
+        List<ModuleDTO> moduleDTOs = modules.stream()
+                                            .map(module -> mapper.map(module, ModuleDTO.class))
+                                            .collect(Collectors.toList());
+    
+        return new ResponseEntity<>(moduleDTOs, HttpStatus.OK);
     }
 
 }

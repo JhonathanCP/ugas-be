@@ -26,6 +26,9 @@ public class ReportDTO {
     @Size(max = 200)
     private String description;
 
+    @Size(max = 250)
+    private String url;
+
     @NotNull
     private ReportTypeDTO reportType;
 

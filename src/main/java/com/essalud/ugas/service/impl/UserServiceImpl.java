@@ -52,6 +52,11 @@ public class UserServiceImpl extends CRUDImpl<User, Integer> implements IUserSer
     }
 
     @Override
+    public User findOneByUsername(String username) {
+        return userRepo.findOneByUsername(username);
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepo.findOneByUsername(username);
 
@@ -185,6 +190,13 @@ public class UserServiceImpl extends CRUDImpl<User, Integer> implements IUserSer
 
         List<Report> allReports = reportRepo.findAll();
         allReports.forEach(report -> removeReportFromUser(user, report));
+    }
+
+    @Override
+    public List<Module> getModulesWithActiveReports(User user) {
+
+        return userRepo.getModulesWithActiveReports(user);
+        
     }
     
 }

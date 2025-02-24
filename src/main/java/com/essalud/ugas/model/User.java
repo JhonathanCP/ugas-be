@@ -40,6 +40,9 @@ public class User {
     private String email;
 
     @Column(nullable = false)
+    private Boolean ldap;
+
+    @Column(nullable = false)
     private Boolean enabled;
 
     @ManyToMany(fetch = FetchType.EAGER)

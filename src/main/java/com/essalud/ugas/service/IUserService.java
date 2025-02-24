@@ -3,9 +3,12 @@ package com.essalud.ugas.service;
 import java.util.List;
 
 import com.essalud.ugas.model.Report;
+import com.essalud.ugas.model.Module;
 import com.essalud.ugas.model.User;
 
 public interface IUserService extends ICRUD<User, Integer>{
+
+    User findOneByUsername(String username);
 
     // Métodos relacionados con los reportes de un usuario
     void addReportToUser(User user, Report report);
@@ -22,5 +25,7 @@ public interface IUserService extends ICRUD<User, Integer>{
     void removeReportsForModuleFromUser(User user, Integer moduleId);
     void addAllReportsToUser(User user);
     void removeAllReportsFromUser(User user);
+
+    List<Module> getModulesWithActiveReports(User user);
 
 }

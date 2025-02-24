@@ -33,6 +33,9 @@ public class UserDTO {
     private String password;
 
     @NotNull
+    private Boolean ldap;
+
+    @NotNull
     private Boolean enabled;
 
     @NotNull

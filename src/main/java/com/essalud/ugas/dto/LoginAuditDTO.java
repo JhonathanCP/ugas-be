@@ -18,7 +18,6 @@ public class LoginAuditDTO {
     @EqualsAndHashCode.Include
     private Integer idLoginAudit;
 
-    @NotNull
     private UserDTO user;
 
     @NotNull

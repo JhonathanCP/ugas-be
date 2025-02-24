@@ -54,6 +54,7 @@ public class WebSecurityConfig {
                         .requestMatchers(antMatcher("/login")).permitAll()
                         .requestMatchers(antMatcher("/logout-token")).permitAll()
                         .requestMatchers(antMatcher("/refresh-token")).permitAll()
+                        .requestMatchers(antMatcher("/login-audits")).permitAll()
                         .requestMatchers(antMatcher("/mail/**")).permitAll()
                         .anyRequest().authenticated()
                 )

@@ -31,7 +31,7 @@ public class LoginAudit {
     private Integer idLoginAudit;
 
     @ManyToOne
-    @JoinColumn(name = "id_user", nullable = false, foreignKey = @ForeignKey(name = "FK_ACCESS_AUDIT_USER"))
+    @JoinColumn(name = "id_user", nullable = true, foreignKey = @ForeignKey(name = "FK_ACCESS_AUDIT_USER"))
     private User user;
 
     @Column(length = 70, nullable = false)
