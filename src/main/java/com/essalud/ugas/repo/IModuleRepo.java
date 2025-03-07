@@ -19,6 +19,6 @@ public interface IModuleRepo extends IGenericRepo<Module, Integer> {
     List<Module> isActiveAndHasActiveReportsInProduction();
 
     @Query("SELECT r FROM Report r WHERE r.module.idModule = :id AND r.active = true")
-    List<Report> findReportsByModuleId(@Param("id") Integer id);   
+    List<Report> findReportsByModuleId(@Param("id") Integer id);
 
 }

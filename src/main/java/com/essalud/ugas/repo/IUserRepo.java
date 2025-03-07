@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.essalud.ugas.model.User;
 import com.essalud.ugas.model.Module;
+import com.essalud.ugas.model.Report;
 
 
 public interface IUserRepo extends IGenericRepo<User, Integer>{
@@ -16,4 +17,7 @@ public interface IUserRepo extends IGenericRepo<User, Integer>{
 
     @Query("SELECT DISTINCT m FROM Module m JOIN Report r ON m.idModule = r.module.idModule JOIN UserReport ur ON ur.report.idReport = r.idReport JOIN User u ON u.idUser = ur.user.idUser WHERE u = :user AND r.active = true")
     List<Module> getModulesWithActiveReports(User user);
+
+    @Query("SELECT DISTINCT r FROM Report r JOIN r.module m JOIN UserReport ur ON ur.report.idReport = r.idReport JOIN User u ON u.idUser = ur.user.idUser WHERE u = :user AND m = :module AND r.active = true")
+    List<Report> getActiveReportsFromModule(User user, Module module);
 }

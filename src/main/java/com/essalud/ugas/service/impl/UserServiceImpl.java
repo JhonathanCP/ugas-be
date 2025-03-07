@@ -198,5 +198,12 @@ public class UserServiceImpl extends CRUDImpl<User, Integer> implements IUserSer
         return userRepo.getModulesWithActiveReports(user);
         
     }
+
+    @Override
+    public List<Report> getActiveReportsFromModule(User user, Module module) {
+
+        return userRepo.getActiveReportsFromModule(user, module);
+        
+    }
     
 }

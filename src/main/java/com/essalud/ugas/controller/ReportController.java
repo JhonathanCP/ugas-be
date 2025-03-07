@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.essalud.ugas.service.IReportService;
@@ -65,7 +67,7 @@ public class ReportController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Report> update(@PathVariable Integer id, @Valid @RequestBody ReportDTO dto) {
+    public ResponseEntity<ReportDTO> update(@PathVariable Integer id, @Valid @RequestBody ReportDTO dto) {
         // Verificar que el usuario exista
         Report obj = service.findById(id);
         if (obj == null) {
@@ -78,8 +80,12 @@ public class ReportController {
         // Asignar el ID desde la URL al objeto mapeado
         Report.setIdReport(id);
 
+        Report.setImage(obj.getImage());
+
+        ReportDTO dtoResponse = mapper.map(service.update(Report), ReportDTO.class);
+
         // Actualizar el usuario
-        return new ResponseEntity<>(service.update(Report), HttpStatus.OK);
+        return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
     }
 
 
@@ -93,6 +99,23 @@ public class ReportController {
             service.delete(id);
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/{id}/image")
+    public ResponseEntity<Void> updateImage(@PathVariable Integer id, @RequestParam("image") MultipartFile imageFile) {
+        Report report = service.findById(id);
+        if (report == null) {
+            throw new ModelNotFoundException("ID DOES NOT EXIST: " + id);
+        }
+
+        try {
+            report.setImage(imageFile.getBytes());
+            service.update(report);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

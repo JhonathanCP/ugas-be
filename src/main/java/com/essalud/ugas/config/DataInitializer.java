@@ -35,6 +35,9 @@ public class DataInitializer implements CommandLineRunner {
     @Value("${admin.email}")
     private String adminEmail;
 
+    @Value("${admin.ldap}")
+    private Boolean ldap;
+
     @Value("${roles}")
     private String roles;
 
@@ -67,6 +70,7 @@ public class DataInitializer implements CommandLineRunner {
             User adminUser = new User();
             adminUser.setUsername(adminUsername);
             adminUser.setEmail(adminEmail);
+            adminUser.setLdap(ldap);
             adminUser.setPassword(passwordEncoder.encode(adminPassword));
             adminUser.setEnabled(true);
             adminUser.setRoles(Collections.singletonList(adminRole));

@@ -27,5 +27,6 @@ public interface IUserService extends ICRUD<User, Integer>{
     void removeAllReportsFromUser(User user);
 
     List<Module> getModulesWithActiveReports(User user);
+    List<Report> getActiveReportsFromModule(User user, Module module);
 
 }

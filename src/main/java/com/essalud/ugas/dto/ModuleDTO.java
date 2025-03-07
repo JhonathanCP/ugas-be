@@ -1,5 +1,9 @@
 package com.essalud.ugas.dto;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -11,6 +15,7 @@ import lombok.NoArgsConstructor;;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true )
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idModule")
 public class ModuleDTO {
 
     @EqualsAndHashCode.Include
@@ -26,5 +31,10 @@ public class ModuleDTO {
 
     @NotNull
     private Boolean active;
+
+    @JsonManagedReference
+    private List<ReportDTO> reports;
+
+    private byte[] image;
 
 }

@@ -5,9 +5,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.List;
 
 @Entity
 @Data
@@ -27,5 +29,11 @@ public class Module {
 
     @Column(nullable = false)
     private Boolean active;
+
+    @OneToMany(mappedBy = "module")
+    private List<Report> reports;
+
+    @Column
+    private byte[] image;
 
 }

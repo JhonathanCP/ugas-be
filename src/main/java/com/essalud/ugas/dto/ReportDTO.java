@@ -2,6 +2,8 @@ package com.essalud.ugas.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -35,6 +37,8 @@ public class ReportDTO {
     @NotNull
     private ReportStatusDTO reportStatus;
 
+    @JsonBackReference
+    //@JsonIdentityReference(alwaysAsId = true)
     @NotNull
     private ModuleDTO module;
 
@@ -42,5 +46,7 @@ public class ReportDTO {
     private Boolean active;
 
     private LocalDateTime createTime;
+
+    private byte[] image;
 
 }

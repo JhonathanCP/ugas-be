@@ -62,4 +62,7 @@ public class Report {
         this.createTime = LocalDateTime.now();
     }
 
+    @Column
+    private byte[] image;
+
 }

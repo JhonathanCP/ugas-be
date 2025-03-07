@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.essalud.ugas.service.IModuleService;
@@ -67,7 +69,7 @@ public class ModuleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Module> update(@PathVariable Integer id, @Valid @RequestBody ModuleDTO dto) {
+    public ResponseEntity<ModuleDTO> update(@PathVariable Integer id, @Valid @RequestBody ModuleDTO dto) {
         // Verificar que el usuario exista
         Module obj = service.findById(id);
         if (obj == null) {
@@ -80,8 +82,12 @@ public class ModuleController {
         // Asignar el ID desde la URL al objeto mapeado
         Module.setIdModule(id);
 
+        Module.setImage(obj.getImage());
+
+        ModuleDTO dtoResponse = mapper.map(service.update(Module), ModuleDTO.class);
+
         // Actualizar el usuario
-        return new ResponseEntity<>(service.update(Module), HttpStatus.OK);
+        return new ResponseEntity<>(dtoResponse, HttpStatus.OK);
     }
 
 
@@ -128,6 +134,23 @@ public class ModuleController {
                                     .collect(Collectors.toList());
 
         return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/image")
+    public ResponseEntity<Void> updateImage(@PathVariable Integer id, @RequestParam("image") MultipartFile imageFile) {
+        Module module = service.findById(id);
+        if (module == null) {
+            throw new ModelNotFoundException("ID DOES NOT EXIST: " + id);
+        }
+
+        try {
+            module.setImage(imageFile.getBytes());
+            service.update(module);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

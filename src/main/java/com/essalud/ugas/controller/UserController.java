@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.essalud.ugas.service.IModuleService;
 import com.essalud.ugas.service.IReportService;
 import com.essalud.ugas.service.IUserService;
 
@@ -39,6 +40,9 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private IModuleService moduleService;
 
     @Autowired
     private IReportService reportService;
@@ -260,6 +264,28 @@ public class UserController {
                                             .collect(Collectors.toList());
     
         return new ResponseEntity<>(moduleDTOs, HttpStatus.OK);
+    }
+
+    @GetMapping("/{userId}/module/{moduleId}/reports")
+    public ResponseEntity<List<ReportDTO>> getActiveReportsFromModule(@PathVariable Integer userId, @PathVariable Integer moduleId) {
+        User user = userService.findById(userId);
+    
+        if (user == null) {
+            throw new ModelNotFoundException("User not found");
+        }
+
+        Module module = moduleService.findById(moduleId);
+
+        if (module == null) {
+            throw new ModelNotFoundException("Module not found");
+        }
+    
+        List<Report> reports = userService.getActiveReportsFromModule(user, module);
+        List<ReportDTO> reportDTOs = reports.stream()
+                                            .map(report -> mapper.map(report, ReportDTO.class))
+                                            .collect(Collectors.toList());
+    
+        return new ResponseEntity<>(reportDTOs, HttpStatus.OK);
     }
 
 }
