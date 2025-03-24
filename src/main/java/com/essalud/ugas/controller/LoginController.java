@@ -78,6 +78,8 @@ public class LoginController {
                 entity,
                 String.class
             );
+            
+            
 
             if (ldapResponse.getStatusCode() != HttpStatus.OK) {
                 return ResponseEntity.badRequest().body(new JwtResponse(null, "LDAP authentication failed"));

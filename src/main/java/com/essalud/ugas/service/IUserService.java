@@ -3,6 +3,8 @@ package com.essalud.ugas.service;
 import java.util.List;
 
 import com.essalud.ugas.model.Report;
+import com.essalud.ugas.model.FileType;
+import com.essalud.ugas.model.MediaFile;
 import com.essalud.ugas.model.Module;
 import com.essalud.ugas.model.User;
 
@@ -28,5 +30,13 @@ public interface IUserService extends ICRUD<User, Integer>{
 
     List<Module> getModulesWithActiveReports(User user);
     List<Report> getActiveReportsFromModule(User user, Module module);
+
+    //FILES
+    void addFileToUser(User user, MediaFile mediaFile);
+    void removeFileFromUser(User user, MediaFile mediaFile);
+    List<MediaFile> getFilesFromUser(User user);
+    void addAllFilesToUser(User user);
+
+    List<FileType> getFileTypesWithActiveFiles(User user);
 
 }

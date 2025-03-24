@@ -25,8 +25,8 @@ public class AuthServiceImpl { //Para uso de acceso usando @PreAuthorize
         val auth = SecurityContextHolder.getContext().getAuthentication();
         for(GrantedAuthority gra : auth.getAuthorities()){
             val rolUser = gra.getAuthority();
-            log.info(rolUser);
-            log.info(auth.getName());
+            // log.info(rolUser);
+            // log.info(auth.getName());
             if (Arrays.stream(methodRoles).anyMatch(rolUser::equalsIgnoreCase))
                 rpta = true;
         }

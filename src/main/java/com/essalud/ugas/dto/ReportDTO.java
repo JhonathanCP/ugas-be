@@ -36,7 +36,7 @@ public class ReportDTO {
 
     @NotNull
     private ReportStatusDTO reportStatus;
-
+    
     @JsonBackReference
     //@JsonIdentityReference(alwaysAsId = true)
     @NotNull

@@ -2,16 +2,22 @@ package com.essalud.ugas.service.impl;
 
 import com.essalud.ugas.exception.ModelNotFoundException;
 import com.essalud.ugas.model.Report;
+import com.essalud.ugas.model.FileType;
+import com.essalud.ugas.model.MediaFile;
 import com.essalud.ugas.model.Module;
 import com.essalud.ugas.model.User;
 import com.essalud.ugas.model.UserFavoriteReport;
 import com.essalud.ugas.model.UserFavoriteReportPK;
+import com.essalud.ugas.model.UserMediaFile;
+import com.essalud.ugas.model.UserMediaFilePK;
 import com.essalud.ugas.model.UserReport;
 import com.essalud.ugas.model.UserReportPK;
 import com.essalud.ugas.repo.IGenericRepo;
+import com.essalud.ugas.repo.IMediaFileRepo;
 import com.essalud.ugas.repo.IModuleRepo;
 import com.essalud.ugas.repo.IReportRepo;
 import com.essalud.ugas.repo.IUserFavoriteReportRepo;
+import com.essalud.ugas.repo.IUserMediaFileRepo;
 import com.essalud.ugas.repo.IUserRepo;
 import com.essalud.ugas.repo.IUserReportRepo;
 import com.essalud.ugas.service.IUserService;
@@ -44,6 +50,12 @@ public class UserServiceImpl extends CRUDImpl<User, Integer> implements IUserSer
 
     @Autowired
     private IModuleRepo moduleRepo;
+
+    @Autowired
+    private IUserMediaFileRepo userMediaFileRepo;
+
+    @Autowired
+    private IMediaFileRepo mediaFileRepo;
 
 
     @Override
@@ -203,6 +215,54 @@ public class UserServiceImpl extends CRUDImpl<User, Integer> implements IUserSer
     public List<Report> getActiveReportsFromModule(User user, Module module) {
 
         return userRepo.getActiveReportsFromModule(user, module);
+        
+    }
+
+    @Override
+    public void addFileToUser(User user, MediaFile mediaFile) {
+        if (user == null || mediaFile == null) {
+            throw new IllegalArgumentException("User or File cannot be null");
+        }
+
+        UserMediaFile userMediaFile = new UserMediaFile(user, mediaFile);
+        userMediaFileRepo.save(userMediaFile);
+    }
+
+    @Override
+    public void removeFileFromUser(User user, MediaFile mediaFile) {
+        if (user == null || mediaFile == null) {
+            throw new IllegalArgumentException("User or File cannot be null");
+        }
+
+        UserMediaFilePK userMediaFilePK = new UserMediaFilePK(user, mediaFile);
+        userMediaFileRepo.deleteById(userMediaFilePK);
+    }
+
+    @Override
+    public List<MediaFile> getFilesFromUser(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+
+        List<UserMediaFile> userMediaFiles = userMediaFileRepo.findByUser(user);
+        return userMediaFiles.stream().map(userMediaFile -> userMediaFile.getMediaFile()).collect(Collectors.toList());
+    }
+
+    @Override
+    public void addAllFilesToUser(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+
+        List<MediaFile> allFiles = mediaFileRepo.findAll();
+        allFiles.forEach(file -> addFileToUser(user, file));
+    }
+
+
+    @Override
+    public List<FileType> getFileTypesWithActiveFiles(User user) {
+
+        return userRepo.getFileTypesWithActiveFiles(user);
         
     }
     

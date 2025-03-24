@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.essalud.ugas.service.IMediaFileService;
 import com.essalud.ugas.service.IModuleService;
 import com.essalud.ugas.service.IReportService;
 import com.essalud.ugas.service.IUserService;
@@ -23,12 +24,16 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.essalud.ugas.dto.FileTypeDTO;
+import com.essalud.ugas.dto.MediaFileDTO;
 import com.essalud.ugas.dto.ModuleDTO;
 import com.essalud.ugas.dto.ReportDTO;
 import com.essalud.ugas.dto.UserDTO;
 import com.essalud.ugas.exception.ModelNotFoundException;
 import com.essalud.ugas.model.Report;
 import com.essalud.ugas.model.User;
+import com.essalud.ugas.model.FileType;
+import com.essalud.ugas.model.MediaFile;
 import com.essalud.ugas.model.Module;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,6 +51,10 @@ public class UserController {
 
     @Autowired
     private IReportService reportService;
+
+    @Autowired
+    private IMediaFileService mediaFileService;
+
 
     @Autowired
     private ModelMapper mapper;
@@ -286,6 +295,79 @@ public class UserController {
                                             .collect(Collectors.toList());
     
         return new ResponseEntity<>(reportDTOs, HttpStatus.OK);
+    }
+
+
+    //PERMISOS ARCHIVOS
+    @PostMapping("/{userId}/file/{mediaFileId}")
+    public ResponseEntity<Void> addFileToUser(@PathVariable Integer userId, @PathVariable Integer mediaFileId) {
+        User user = userService.findById(userId);
+        MediaFile mediaFile = mediaFileService.findById(mediaFileId);
+
+        if (user == null || mediaFile == null) {
+            throw new ModelNotFoundException("User or File not found");
+        }
+
+        userService.addFileToUser(user, mediaFile);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{userId}/file/{mediaFileId}")
+    public ResponseEntity<Void> removeFileFromUser(@PathVariable Integer userId, @PathVariable Integer mediaFileId) {
+        User user = userService.findById(userId);
+        MediaFile mediaFile = mediaFileService.findById(mediaFileId);
+
+        if (user == null || mediaFile == null) {
+            throw new ModelNotFoundException("User or File not found");
+        }
+
+        userService.removeFileFromUser(user, mediaFile);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping("/{userId}/files")
+    public ResponseEntity<List<MediaFileDTO>> getFilesFromUser(@PathVariable Integer userId) {
+        User user = userService.findById(userId);
+
+        if (user == null) {
+            throw new ModelNotFoundException("User not found");
+        }
+
+        List<MediaFileDTO> mediaFiles = userService.getFilesFromUser(user)
+                                            .stream()
+                                            .map(mediaFile -> mapper.map(mediaFile, MediaFileDTO.class))
+                                            .collect(Collectors.toList());
+        
+        return new ResponseEntity<>(mediaFiles, HttpStatus.OK);
+    }
+
+    @PreAuthorize("@authServiceImpl.hasAccess('ADMIN')")
+    @PostMapping("/{userId}/all-files")
+    public ResponseEntity<Void> addAllFilesToUser(@PathVariable Integer userId) {
+        User user = userService.findById(userId);
+
+        if (user == null) {
+            throw new ModelNotFoundException("User not found");
+        }
+
+        userService.addAllFilesToUser(user);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{userId}/file-types")
+    public ResponseEntity<List<FileTypeDTO>> getFileTypesWithActiveFiles(@PathVariable Integer userId) {
+        User user = userService.findById(userId);
+    
+        if (user == null) {
+            throw new ModelNotFoundException("User not found");
+        }
+    
+        List<FileType> fileTypes = userService.getFileTypesWithActiveFiles(user);
+        List<FileTypeDTO> fileTypeDTOs = fileTypes.stream()
+                                            .map(fileType -> mapper.map(fileType, FileTypeDTO.class))
+                                            .collect(Collectors.toList());
+    
+        return new ResponseEntity<>(fileTypeDTOs, HttpStatus.OK);
     }
 
 }
